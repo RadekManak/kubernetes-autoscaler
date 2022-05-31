@@ -40,20 +40,10 @@ const (
 	maxPodsKey      = "capacity.cluster-autoscaler.kubernetes.io/maxPods"
 	taintsKey       = "capacity.cluster-autoscaler.kubernetes.io/taints"
 	labelsKey       = "capacity.cluster-autoscaler.kubernetes.io/labels"
-	// UnknownArch is used if the Architecture is Unknown
-	UnknownArch SystemArchitecture = ""
-	// Amd64 is used if the Architecture is x86_64
-	Amd64 SystemArchitecture = "amd64"
-	// Arm64 is used if the Architecture is ARM64
-	Arm64 SystemArchitecture = "arm64"
-	// Ppc64le is used if the Architecture is ppc64le
-	Ppc64le SystemArchitecture = "ppc64le"
-	// S390x is used if the Architecture is s390x
-	S390x SystemArchitecture = "s390x"
-	// DefaultArch should be used as a fallback if not passed by the environment via the --scale-up-from-zero-default-arch
-	DefaultArch = Amd64
-	// scaleUpFromZeroDefaultEnvVar is the name of the env var for the default architecture
-	scaleUpFromZeroDefaultArchEnvVar = "CAPI_SCALE_ZERO_DEFAULT_ARCH"
+
+	// TODO: update machine API operator to match CAPI annotation so this can be inferred dynamically by getMachineDeleteAnnotationKey i.e ${apigroup}/delete-machine
+	// https://github.com/openshift/machine-api-operator/blob/128c5c90918c009172c6d24d5715888e0e1d59e4/pkg/controller/machineset/delete_policy.go#L34
+	oldMachineDeleteAnnotationKey = "machine.openshift.io/cluster-api-delete-machine"
 )
 
 var (
