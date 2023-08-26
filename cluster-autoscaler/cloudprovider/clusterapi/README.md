@@ -280,10 +280,10 @@ metadata:
 #### CPU Architecture awareness for single-arch clusters 
 
 Users of single-arch non-amd64 clusters who are using scale from zero 
-support should also set the `CAPI_SCALE_ZERO_DEFAULT_ARCH` environment variable
-to set the architecture of the nodes they want to default the node group templates to.
-The autoscaler will default to `amd64` if it is not set, and the node 
-group templates may not match the nodes' architecture, specifically when 
+support should also set the `--scale-up-from-zero-default-arch` flag to the 
+architecture of the nodes they want to default the node group templates to.
+The autoscaler will default to `amd64` if the flag is not set, and the node 
+group templates will not match the nodes' architecture, specifically when 
 the workload triggering the scale-up uses a node affinity predicate checking 
 for the node's architecture.
 
