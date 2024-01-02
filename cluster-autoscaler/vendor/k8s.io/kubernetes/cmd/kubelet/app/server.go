@@ -201,6 +201,7 @@ is checked every 20 seconds (also configurable with a flag).`,
 
 			if cleanFlagSet.Changed("pod-infra-container-image") {
 				klog.InfoS("--pod-infra-container-image will not be pruned by the image garbage collector in kubelet and should also be set in the remote runtime")
+				_ = cmd.Flags().MarkDeprecated("pod-infra-container-image", "--pod-infra-container-image will be removed in 1.30. Image garbage collector will get sandbox image information from CRI.")
 			}
 
 			// load kubelet config file, if provided
@@ -736,7 +737,7 @@ func run(ctx context.Context, s *options.KubeletServer, kubeDeps *kubelet.Depend
 		}
 		if reservedSystemCPUs.Size() > 0 {
 			// at cmd option validation phase it is tested either --system-reserved-cgroup or --kube-reserved-cgroup is specified, so overwrite should be ok
-			klog.InfoS("Option --reserved-cpus is specified, it will overwrite the cpu setting in KubeReserved and SystemReserved", "kubeReservedCPUs", s.KubeReserved, "systemReservedCPUs", s.SystemReserved)
+			klog.InfoS("Option --reserved-cpus is specified, it will overwrite the cpu setting in KubeReserved and SystemReserved", "kubeReserved", s.KubeReserved, "systemReserved", s.SystemReserved)
 			if s.KubeReserved != nil {
 				delete(s.KubeReserved, "cpu")
 			}
@@ -744,7 +745,7 @@ func run(ctx context.Context, s *options.KubeletServer, kubeDeps *kubelet.Depend
 				s.SystemReserved = make(map[string]string)
 			}
 			s.SystemReserved["cpu"] = strconv.Itoa(reservedSystemCPUs.Size())
-			klog.InfoS("After cpu setting is overwritten", "kubeReservedCPUs", s.KubeReserved, "systemReservedCPUs", s.SystemReserved)
+			klog.InfoS("After cpu setting is overwritten", "kubeReserved", s.KubeReserved, "systemReserved", s.SystemReserved)
 		}
 
 		kubeReserved, err := parseResourceList(s.KubeReserved)
@@ -800,7 +801,7 @@ func run(ctx context.Context, s *options.KubeletServer, kubeDeps *kubelet.Depend
 				NodeAllocatableConfig: cm.NodeAllocatableConfig{
 					KubeReservedCgroupName:   s.KubeReservedCgroup,
 					SystemReservedCgroupName: s.SystemReservedCgroup,
-					EnforceNodeAllocatable:   sets.NewString(s.EnforceNodeAllocatable...),
+					EnforceNodeAllocatable:   sets.New(s.EnforceNodeAllocatable...),
 					KubeReserved:             kubeReserved,
 					SystemReserved:           systemReserved,
 					ReservedSystemCPUs:       reservedSystemCPUs,
@@ -831,6 +832,10 @@ func run(ctx context.Context, s *options.KubeletServer, kubeDeps *kubelet.Depend
 
 	if kubeDeps.PodStartupLatencyTracker == nil {
 		kubeDeps.PodStartupLatencyTracker = kubeletutil.NewPodStartupLatencyTracker()
+	}
+
+	if kubeDeps.NodeStartupLatencyTracker == nil {
+		kubeDeps.NodeStartupLatencyTracker = kubeletutil.NewNodeStartupLatencyTracker()
 	}
 
 	// TODO(vmarmol): Do this through container config.

@@ -46,7 +46,7 @@ func (pl *SchedulingGates) PreEnqueue(ctx context.Context, p *v1.Pod) *framework
 	if !pl.enablePodSchedulingReadiness || len(p.Spec.SchedulingGates) == 0 {
 		return nil
 	}
-	var gates []string
+	gates := make([]string, 0, len(p.Spec.SchedulingGates))
 	for _, gate := range p.Spec.SchedulingGates {
 		gates = append(gates, gate.Name)
 	}
@@ -62,6 +62,6 @@ func (pl *SchedulingGates) EventsToRegister() []framework.ClusterEventWithHint {
 }
 
 // New initializes a new plugin and returns it.
-func New(_ runtime.Object, _ framework.Handle, fts feature.Features) (framework.Plugin, error) {
+func New(_ context.Context, _ runtime.Object, _ framework.Handle, fts feature.Features) (framework.Plugin, error) {
 	return &SchedulingGates{enablePodSchedulingReadiness: fts.EnablePodSchedulingReadiness}, nil
 }
