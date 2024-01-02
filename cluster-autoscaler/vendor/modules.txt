@@ -2201,7 +2201,6 @@ sigs.k8s.io/cloud-provider-azure/pkg/azureclients
 sigs.k8s.io/cloud-provider-azure/pkg/azureclients/armclient
 sigs.k8s.io/cloud-provider-azure/pkg/azureclients/blobclient
 sigs.k8s.io/cloud-provider-azure/pkg/azureclients/containerserviceclient
-sigs.k8s.io/cloud-provider-azure/pkg/azureclients/containerserviceclient/mockcontainerserviceclient
 sigs.k8s.io/cloud-provider-azure/pkg/azureclients/deploymentclient
 sigs.k8s.io/cloud-provider-azure/pkg/azureclients/diskclient
 sigs.k8s.io/cloud-provider-azure/pkg/azureclients/diskclient/mockdiskclient
